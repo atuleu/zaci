@@ -1,14 +1,28 @@
+from contextlib import asynccontextmanager
 from typing import Optional
 from threading import Thread
 from fastapi import FastAPI, HTTPException
-
+import os
 from rpi_camera_service.camera_stream import CameraParameter, CameraStream
 
+
+debug = os.getenv("DEBUG", "0") != "0"
 
 stream: Optional[CameraStream] = None
 streamThread: Optional[Thread] = None
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global stream
+    global streamThread
+    yield
+    if stream is not None and streamThread is not None:
+        stream.stop()
+        streamThread.join()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/camera")
@@ -27,7 +41,7 @@ async def start_camera(params: CameraParameter):
         raise HTTPException(status_code=412, detail="stream is already started")
 
     try:
-        stream = CameraStream(params)
+        stream = CameraStream(params, debug=debug)
         streamThread = Thread(target=stream.run)
         streamThread.start()
     except Exception as e:

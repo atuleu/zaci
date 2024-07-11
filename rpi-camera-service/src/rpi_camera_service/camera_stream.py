@@ -44,7 +44,7 @@ class CameraParameter(BaseModel):
     StreamResolution: Resolution = Resolution(Width=854, Height=480)
     StreamBitrate: int = 400
 
-    RtspServerPath: str = "rtsp://localhost:8554/camera/live"
+    RtspServerPath: str = "rtsp://localhost:8554/camera-live"
 
 
 class CameraStream:
@@ -63,8 +63,8 @@ class CameraStream:
 
         self.pipeline = Gst.parse_launch(
             f"{src} !"
-            f" video/x-raw,width={self._params.FileResolution.Width},height={self._params.FileResolution.Height},framerate={self._params.Framerate} !"
-            " tee name=t ! queue ! x264enc"
+            f" video/x-raw,width={self._params.FileResolution.Width},height={self._params.FileResolution.Height},framerate={self._params.Framerate}/1"
+            " ! tee name=t ! queue ! x264enc"
             f" bitrate={self._params.FileBitrate} speed-preset={self._params.FileSpeedPreset} tune=zerolatency"
             f" ! mp4mux ! filesink name=mp4sink location={self.now.isoformat()}.mp4 t."
             " ! queue ! videoscale !"
@@ -92,6 +92,7 @@ class CameraStream:
                 return
             if msg.type == Gst.MessageType.ERROR:
                 err, dbg = msg.parse_error()
+                loop.quit()
                 raise RuntimeError(f"Gst Error ({msg.src.name}): {err}\n{dbg}")
             if msg.type == Gst.MessageType.EOS:
                 loop.quit()

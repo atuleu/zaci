@@ -1,8 +1,3 @@
-rtsp: yes
-hls: no
-rtmp: no
-webrtc: yes
-srt: no
 
 paths:
-  camera/live:
+  camera-live:
