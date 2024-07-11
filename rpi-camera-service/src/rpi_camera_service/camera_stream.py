@@ -3,7 +3,7 @@ import gi
 import signal
 
 gi.require_version("Gst", "1.0")
-from gi.repository import GLib, Gst, GObject
+from gi.repository import GLib, Gst
 
 from pydantic import BaseModel
 
