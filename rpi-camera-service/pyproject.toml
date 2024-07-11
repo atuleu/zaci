@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rpi-camera-service"
+version = "0.0.1"
+authors = [
+  { name="Alexandre Tuleu", email="alexandre.tuleu.2005@polytechnique.org" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GNU General Public License v3 (GPLv3)"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: MIT License",
+]
+
+dependencies = [
+   "fastapi",
+   "pygobject",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=22.10",
+    "pytest",
+    "PyGObject-stubs"
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py310', 'py311']
+preview = true
+unstable = true
+
+[tool.pyright]
