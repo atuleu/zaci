@@ -56,33 +56,24 @@ class CameraStream:
 
     def _create_pipeline(self):
         if self._debug is False:
-            self.pipeline = Gst.parse_launch(
-                "libcamerasrc name=source !"
-                f" video/x-raw,width={self._params.FileResolution.Width},height={self._params.FileResolution.Height},framerate={self._params.Framerate} !"
-                " tee name=t ! queue ! x264enc"
-                f" bitrate={self._params.FileBitrate} speed-preset={self._params.FileSpeedPreset} tune=zerolatency"
-                f" ! mp4mux ! filesink name=mp4sink location={self.now.isoformat()}.mp4"
-                " t. ! queue ! videoscale !"
-                f" video/x-raw,width={self._params.StreamResolution.Width},height={self._params.StreamResolution.Height} !"
-                f" openh264enc bitrate={self._params.StreamBitrate*1000} ! video/x-h264"
-                f" ! rtspclientsink location={self._params.RtspServerPath}"
-            )
+            src = "libcamerasrc name=source"
+
         else:
-            self.pipeline = Gst.parse_launch(
-                "videotestsrc is-live=true name=source !"
-                f" video/x-raw,width={self._params.FileResolution.Width},height={self._params.FileResolution.Height},framerate={self._params.Framerate}/1"
-                " ! tee name=t ! queue ! x264enc"
-                f" bitrate={self._params.FileBitrate} speed-preset={self._params.FileSpeedPreset} tune=zerolatency"
-                f" ! mp4mux ! filesink location=/tmp/{self.now.isoformat()}.mp4"
-                " name=mp4sink t. ! queue ! videoscale !"
-                f" video/x-raw,width={self._params.StreamResolution.Width},height={self._params.StreamResolution.Height} !"
-                f" openh264enc bitrate={self._params.StreamBitrate*1000} ! video/x-h264"
-                f" ! rtspclientsink location={self._params.RtspServerPath}"
-            )
+            src = "videotestsrc is-live=true name=source"
+
+        self.pipeline = Gst.parse_launch(
+            f"{src} !"
+            f" video/x-raw,width={self._params.FileResolution.Width},height={self._params.FileResolution.Height},framerate={self._params.Framerate} !"
+            " tee name=t ! queue ! x264enc"
+            f" bitrate={self._params.FileBitrate} speed-preset={self._params.FileSpeedPreset} tune=zerolatency"
+            f" ! mp4mux ! filesink name=mp4sink location={self.now.isoformat()}.mp4 t."
+            " ! queue ! videoscale !"
+            f" video/x-raw,width={self._params.StreamResolution.Width},height={self._params.StreamResolution.Height} !"
+            f" openh264enc bitrate={self._params.StreamBitrate*1000} ! video/x-h264 !"
+            f" rtspclientsink location={self._params.RtspServerPath}"
+        )
 
         self.pipeline.set_name("pipeline_" + self.now.isoformat())
-
-        self.filesink = self.pipeline.get_by_name("mp4sink")
 
         # TODO add appsink to timestamp every buffer
 
@@ -96,7 +87,7 @@ class CameraStream:
 
         loop = GLib.MainLoop()
 
-        def on_message(bus, msg: Gst.Message):
+        def on_message(_, msg: Gst.Message):
             if msg.src.name != self.pipeline.name:
                 return
             if msg.type == Gst.MessageType.ERROR:
