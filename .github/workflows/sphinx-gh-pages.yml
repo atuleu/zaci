@@ -2,11 +2,6 @@
 name: Build and deploy sphinx documentation
 
 on:
-  # Runs on pull requestr targeting the default branch
-  pull_request:
-    branches:
-      - main
-
   # Runs on pushes targeting the default branch
   push:
     branches:
@@ -53,7 +48,6 @@ jobs:
 
   # Deployment job
   deploy:
-    if: github.event.event_name == 'push'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
