@@ -105,5 +105,59 @@ the four side.
 
 |break|
 
-3. Removing the battery module
+3. Removing the right panel
+---------------------------
+
+As the battery module is hard to get out, it is preferable to remove the right
+panel ( on your left if the screen is laying on the table), to ease the access
+to the battery module. For that purpose:
+
+1. Remove the two side M3 x 8mm countersunk screw on the side.
+2. Remove the two M3 x 8mm Pan Head screw on the front.
+
+
+4. Removing the battery module
 ------------------------------
+
+1. Disconnect the following connection on the board
+
+   a. Output Power
+   b. On/Off button
+   c. RPi On/Off signal
+   d. Input Power
+   e. Input Power
+
+|break|
+
+2. Unscrew the two M3 x 6mm Pan Head screws holding the battery module to the
+   main frame.
+
+3. You can now slide out the battery module.
+
+|break|
+
+4. Removing the battery from the battery module.
+------------------------------------------------
+
+1. Disconnect the LiPo battery from the battery module
+   a. Disconnect the balancing cable.
+   b. Disconnect the main power cable
+
+|break|
+
+2. Unscrew the cariage screw of the battery holder.
+
+   .. note::
+
+      You do not need to fully remove the screw. Untie them to allow the
+      carriage to slide open, it will simplify re-assembly.
+
+|break|
+
+5. Install the new battery
+--------------------------
+
+1. While the battery holder are
+
+
+|break|
