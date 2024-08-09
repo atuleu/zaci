@@ -58,7 +58,7 @@ the four side.
 
 |break|
 
-.. _removing the feet:
+.. _whl removing the feet:
 
 1. Removing the back feet
 --------------------------
@@ -257,4 +257,4 @@ the four side.
 6. Remounting the feet
 -----------------------
 
-Follow the steps in :ref:`section 1<removing the feet>` in reverse order.
+Follow the steps in :ref:`section 1<whl removing the feet>` in reverse order.
